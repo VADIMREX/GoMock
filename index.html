@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+<script>
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+    let interfacePath = getCookie("interface-path");
+    async function send(data) {
+        let res = await fetch(interfacePath, {
+            method: "POST",
+            body: JSON.stringify(data)
+        });
+        return await res.json();
+    }
+    async function reloadConfig() {
+        let newValues = await send({
+            "action": "reload-config"
+        });
+        interfacePath = newValues["interface-path"]
+    }
+</script>
+
+<body>
+    <button onclick="reloadConfig()"></button>
+</body>
+
+</html>
