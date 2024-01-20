@@ -23,6 +23,7 @@
         let newValues = await send({
             "action": "reload-config"
         });
+        if (0 != newValues.code) return
         interfacePath = newValues["interface-path"]
     }
 </script>

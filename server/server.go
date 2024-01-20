@@ -21,12 +21,6 @@ func NewServer(config *config.Config) *Server {
 	return &srv
 }
 
-func (s *Server) getInterface(ctx *gin.Context) {
-	ctx.SetCookie("interface-path", s.config.InterfacePath, 0, s.config.InterfacePath, "localhost", false, false)
-	ctx.File("index.html")
-	ctx.Status(200)
-}
-
 func get[TRes any](obj *gin.H, field string) (TRes, error) {
 	var val TRes
 	rawVal, ok := (*obj)[field]
@@ -40,11 +34,20 @@ func get[TRes any](obj *gin.H, field string) (TRes, error) {
 	return val, nil
 }
 
+
+
 func (s *Server) reloadConfig(msg gin.H) gin.H {
 	s.config.Reload()
 	return gin.H{
+		"code": 0,
 		"interface-path": s.config.InterfacePath,
 	}
+}
+
+func (s *Server) getInterface(ctx *gin.Context) {
+	ctx.SetCookie("interface-path", s.config.InterfacePath, 0, s.config.InterfacePath, "localhost", false, false)
+	ctx.File("index.html")
+	ctx.Status(200)
 }
 
 func (s *Server) interfaceHandler(ctx *gin.Context) {
